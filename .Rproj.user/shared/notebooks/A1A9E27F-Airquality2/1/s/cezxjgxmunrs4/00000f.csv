@@ -1,0 +1,2 @@
+"0","knitr::kable(mtcars[1:5, ], caption = ""Questo è un dataset con le prime 5 righe"") %>%"
+"0","  kable_styling(latex_options = ""HOLD_position"")"

@@ -1,0 +1,189 @@
+---
+title: "Il mio primo doc quarto"
+format:
+  html:
+    toc: true
+    toc-title: Outline
+    toc-location: right
+    toc-depth: 3
+    code-fold: true
+    code-tools: 
+      source: true
+      toggle: false
+      caption: Guarda
+execute:
+  eval: true
+  echo: true
+  warning: false
+lang: it
+---
+
+## I grafici
+
+```{r setup, include=FALSE}
+#qui ci puoi mettere pacchetti e dati, nello yaml (execute) mettere le impostazioni per echo, eval ecc
+```
+
+
+```{r}
+plot(rock$peri,rock$shape)
+```
+
+```{r}
+#| eval: true
+#| comment: " "
+
+1+1
+```
+
+```{r}
+#| fig-cap: "La mia immagine"
+#| fig-cap-location: top
+#| out-width: 50%
+#| label: fig-prima
+#| fig-align: center
+knitr::include_graphics("pics/logo.png")
+```
+
+Il logo di UNIPD si vede in @fig-prima
+
+```{r}
+#| echo: false
+#| fig-cap: "Il mio grafico"
+#| fig-cap-location: bottom
+#| out-width: 50%
+#| fig-align: center
+#| label: fig-grafico
+library(ggplot2)
+ggplot(rock, 
+       aes(y=peri,x=shape, color =shape, size = peri)) + geom_point() + 
+  theme_light() + theme(legend.position = "none") 
+```
+
+In @fig-grafico c'è un grafico
+
+```{r}
+#| echo: false
+#| fig-cap: "Il mio grafico 2"
+#| fig-cap-location: bottom
+#| out-width: 50%
+#| fig-align: right
+#| label: fig-grafico2
+
+car::scatterplot(airquality$Temp, airquality$Wind)
+```
+
+
+![il logo unipd](pics/logo.png){#fig-logo2}
+
+In @fig-logo2
+
+## Le tabelle
+```{r}
+#| tbl-cap-location: top
+#| tbl-cap: Una tabella di esempio
+#| tbl-subcap: per far vedere come funzionano
+#| label: tab-esempio
+
+kableExtra::kable(mtcars[1:6, ])
+```
+
+## Colonne
+:::: {.columns}
+
+
+::: {.column width="50%"}
+
+testo nella prima colonna
+
+:::
+
+::: {.column width="50%"}
+```{r}
+head(airquality,10)
+```
+:::
+::::
+
+## Grid
+::: {.grid}
+
+::: {.g-col-4}
+
+Ecco il mio grafico 
+:::
+::: {.g-col-8}
+
+```{r}
+car::scatterplot(airquality$Temp, airquality$Wind)
+```
+
+:::
+
+:::
+
+```{r}
+head(airquality,10)
+```
+
+:::
+
+## Tabset
+
+::: {.panel-tabset}
+
+## Introduzione
+
+Descrizione del mio dataset 
+
+## I dati
+
+
+```{r}
+#| tbl-cap-location: top
+#| tbl-cap: Prime righe del db
+#| label: tbl-table
+
+
+kableExtra::kable(airquality[1:10,])
+```
+
+In @tbl-table le prime 10 osservazioni del dataset Airquality
+
+## Il grafico
+
+```{r}
+#| echo: false
+#| fig-cap: "Scatterplot dei dato"
+#| fig-cap-location: bottom
+#| out-width: 50%
+#| fig-align: right
+#| label: fig-grafico3
+
+car::scatterplot(airquality$Temp, airquality$Wind)
+```
+
+In @fig-grafico3 c'è un grafico
+:::
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+library(kableExtra)
+```
+
+You can add options to executable code like this 
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

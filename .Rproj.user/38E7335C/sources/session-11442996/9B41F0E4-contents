@@ -1,0 +1,244 @@
+---
+title: "Air Quality"
+author: "Libera Mastromatteo"
+date: "University of Padova"
+output:
+  bookdown::pdf_document2:
+    keep_tex: yes
+    number_section: true
+    toc: true
+    toc_depth: 4
+subtitle: New York Air Quality Measurement
+geometry: margin=1.5in
+bibliography: biblio/biblio.bib
+lang: en
+---
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.align = 'center',
+                      out.width = "50%")
+
+load('env.RData')
+library(dplyr)
+library(kableExtra)
+library(ggplot2)
+
+hook_output <- knitr::knit_hooks$get("output")
+ 
+knitr::knit_hooks$set(output = function(x, options) {
+     if (!is.null(n <- options$out.lines)) {
+         x <- xfun::split_lines(x)
+         if (length(x) > n) {
+             # truncate the output
+             x <- c(head(x, n), "....\n")
+         }
+         x <- paste(x, collapse = "\n")
+     }
+     hook_output(x, options)
+})
+```
+
+# Working with Data in R
+
+## Airquality dataset
+
+The \color{red}{airquality} \normalcolor dataset is *built-in* R so there is nothing to install or prepare, it is already there as an \color{green}{R} \normalcolor object. This \color{red}{data} \normalcolor  is small compared to environmental data sets.
+
+### Details of the airquality dataset
+
+Daily readings of the following air quality values for May 1, 1973 a Tuesday to September 30, 1973.
+
+#### Exploring airquality[^1]
+
+[^1]: prova nota
+
+We can look at the first and last few lines of that \color{blue}{airquality} \normalcolor tabular data[^2].
+
+[^2]: questa è la mia seconda nota, c'è anche un link \color{blue}[qui](https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/airquality.html)\normalcolor
+
+# Proviamo a mettere link:
+
+Link [**qui**](https://www.google.com)
+
+## Vai con le liste:
+
+-   Oggi
+-   ho
+-   imparato
+-   cose
+
+1.  Devo
+2.  Fare
+3.  Cose
+
+> 1.  Devo
+> 2.  Fare
+> 3.  Cose
+
+# Inseriamo delle immagini
+
+![Using Markdown code](pics/explaining-how-bad-8943e8c056.jpg)
+
+```{r,fig.cap = "Using RMarkdown code", out.width="75%"}
+knitr::include_graphics(path = "pics/explaining-how-bad-8943e8c056.jpg")
+```
+\newpage
+
+# Inseriamo la bibliografia
+
+@hess2001facial riportano che l'inquinamento fa male
+
+Secondo recenti studi [@hess2001facial], l'inquinamento fa male
+
+\newpage
+
+# Inseriamo delle equazioni
+
+Ecco qui una bellissima equazione $3 + 5 = 8$
+
+$$3 + 9 = 12$$
+$$ Y = mx + q$$
+$$ \Delta = 1 - \pi$$
+$\sqrt{4} = 2$
+
+\newpage
+
+# Come inserire cross-referencing
+
+Come si vede in Tabella \@ref(tab:cars-table1)
+
+```{r cars-table1}
+knitr::kable(mtcars[1:10, ],align = "c", caption = "Questo è un dataset con le prime 10 righe") %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+Come si vede in Tabella \@ref(tab:cars-table)
+
+```{r cars-table}
+knitr::kable(mtcars[1:5, ], caption = "Questo è un dataset con le prime 5 righe") %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+## Inserire cross-referencing per le equazioni richiede scrittura in LateX
+
+\begin{equation}
+\bar{X} = \frac{\sum_{i=1}^n X_i}{n} (\#eq:media)
+\end{equation}
+
+Come si evince in \@ref(eq:media)
+
+\newpage
+
+# Nuovo chunck
+
+```{r, comment=" ", out.lines = 6}
+head(dati)
+```
+
+```{r, warning=FALSE}
+ggplot(mtcars, aes(x=cyl,y=mpg, group=cyl)) + geom_boxplot() 
+```
+
+# Esercitazione
+## Summary
+```{r, comment="NA", echo=F}
+summary(dati)
+```
+
+## Plot 1
+```{r, echo=F, eval=T}
+dati$y = dati$Temp
+dati$x = dati$Month
+```
+
+```{r, echo = F}
+plot(dati$y ~ dati$x)
+```
+
+## Plot 2
+```{r, echo = T, eval = F}
+plot(dati$y ~ dati$x)
+```
+
+## First 10 rows
+
+```{r, comment="NA", out.lines=11, echo=F}
+head(dati,10)
+```
+
+# Tabelle
+|   X	|   Y	| Z  	| W  	| A  	| U |
+|---	|---	|---	|---	|---	|---|
+| 1  	|   1	|   1	| NA	|   C	|   |
+|  B 	|  B 	|  B 	|   S	|   0	|   |
+| NA	|  2 	|  3 	|   3	|   3	|   |
+
+
+| Tables   |      Are      |  Cool |new column     |
+|----------|:-------------:|------:|---------------|
+| col 1 is |  left-aligned | $1600 |.              |
+| col 2 is |    centered   |   $12 |.              |
+| col 3 is | right-aligned |    $1 |.              |
+
+| Tables   |      Are      |  Cool |
+|---------:|-------------- |:----: |
+|      1 is| right-aligned |$1600  |
+|      2 is| left-aligned  |$12    |
+|      3 is| centered      |$1     |
+
+## Tabelle con codice R 
+
+
+```{r, results='asis'}
+library(stargazer)
+stargazer(dati, type="latex", summary = TRUE, title= "Tabella di summary", digits = 3, header=FALSE)
+```
+
+```{r, results='asis',message = FALSE}
+m1 = lm(Temp ~ Month, data = dati)
+
+stargazer(m1, type = "latex", summary = TRUE, ci.level = 0.95, intercept.top = TRUE,
+intercept.bottom = FALSE,title = "Risultati del modello", digits = 3, header = FALSE)
+```
+```{r, results='asis', message = FALSE, warning=FALSE}
+m0 = lm(Temp ~ 1, data = dati)
+m1 = lm(Temp ~ Month, data = dati)
+
+stargazer(m0, m1, type = "latex", summary = TRUE, ci.level = 0.95, intercept.top = TRUE,
+intercept.bottom = FALSE,title = "Risultati del modello", digits = 3, header = FALSE,table.placement = "H", label = "tab:model.comparison")
+```
+Come si vede in Tabella \ref{tab:model.comparison}, qui c'è un confronto tra $m0$ e $m1$.
+
+```{r, echo = F}
+yi = dati$Temp[1]
+mean_y = mean(dati$Temp)
+sd_y = sd(dati$Temp)
+```
+
+$$x = \frac{`r dati$Temp[1] - mean(dati$Temp)`}{`r sd(dati$Temp)`} =`r (dati$Temp[1] - mean(dati$Temp))/ sd(dati$Temp)`$$
+
+$$x = \frac{`r (yi - mean_y)`}{`r sd_y`} =`r (yi - mean_y)/ sd_y`$$
+
+```{r plot-interactive, echo=FALSE, eval=knitr::is_html_output()}
+grafico = ggplot(db_fin, 
+       aes(y=sum,x=rmssd, color = age)) + geom_point() + 
+  theme_bw() + theme(legend.position = "none") 
+plotly::ggplotly(grafico)
+
+```
+```{r plot-static, echo=FALSE, eval=knitr::is_latex_output()}
+grafico = ggplot(dati, 
+       aes(y=Temp,x=Wind, color =Month, size = Day)) + geom_point() + 
+  theme_bw() + theme(legend.position = "none") 
+grafico
+```
+
+`r knitr::asis_output(ifelse(knitr::is_html_output(), "<span style='color:red'>Voglio una frase rossa </span>", "\\color{red} Voglio una frase rossa \\normalcolor"))`
+
+
+\newpage
+
+# References

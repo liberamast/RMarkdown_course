@@ -1,0 +1,16 @@
+"0","####Coefficients table to be added in the SM
+texreg::htmlreg(
+  list(meanhr_lin,meanhr_quad), # list of models to include
+  file = ""answer.doc"", # output filename
+  stars = c(0.001, 0.01, 0.05), 
+  center = TRUE, 
+  ci.force.level = 0.95,
+    # center on page
+  digits = 2,                          # digits for coefs and standard errors
+  single.row = TRUE,                   # standard errors below coefs or on same line
+  leading.zero = TRUE,
+  inline.css = FALSE, doctype = TRUE, html.tag = TRUE, head.tag = TRUE, body.tag = TRUE)
+"
+"2","The table was written to the file 'answer.doc'.
+
+"

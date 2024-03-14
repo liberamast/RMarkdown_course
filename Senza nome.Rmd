@@ -1,0 +1,31 @@
+---
+title: "Untitled"
+author: "Libera Mastromatteo"
+date: "2024-03-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r plot-interactive, echo=FALSE, eval=knitr::is_html_output()}
+grafico = ggplot(db_fin, 
+       aes(y=sum,x=rmssd, size = age)) + geom_point() + 
+  theme_bw() + theme(legend.position = "none") 
+plotly::ggplotly(grafico)
+
+```
+```{r plot-static, echo=FALSE, eval=knitr::is_latex_output()}
+library(ggplot2)
+grafico = ggplot(rock, 
+       aes(y=peri,x=shape, color =shape, size = peri)) + geom_point() + 
+  theme_bw() + theme(legend.position = "none") 
+grafico
+```
+
+`r knitr::asis_output(ifelse(knitr::is_html_output(), '<span style='color:red'>Voglio una frase rossa </span>', '\\color{red} Voglio una frase rossa \\normalcolor'))`
+
+
+
+

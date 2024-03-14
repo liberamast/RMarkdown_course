@@ -1,0 +1,326 @@
+---
+title: "Moderate cardiac vagal tone is associated with more cooperation in children"
+author: "Libera Mastromatteo"
+date: "2022-10-04"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+#### packages I'll need ####
+```{r}
+library(readxl)
+library(ggeffects)
+library(sjPlot)
+library(ggplot2)
+library(car)
+library(lmtest)
+library(Hmisc)
+library(janitor)
+library(flextable)
+library(gtsummary)
+library(knitr)
+library(kableExtra)
+library(ggeffects)
+library(effects)
+library(car)
+```
+
+#####  Power sensitivity analysis #####
+
+```{r}
+set.seed(123)
+# iter<-10000 # number of simulations
+# p<-beta<-rep(NA,iter) # storage variables
+# sd_err<-sqrt((1-0.059)*1.48^2) # 1.46 sigma_y^2, 5.9% explained variance x^2
+# for(i in 1:iter){
+#   x<-runif(111,2.58,9.23);xs<-x-mean(x) # simulate X and X-centered
+#   beta[i]<-rnorm(1,mean=-0.14,sd=0.0682) 
+#   y<-beta[i]*xs^2+rnorm(111,0,sd=sd_err)
+#   p[i]<-coef(summary(lm(y~I(xs^2))))[2,4]
+# }
+# 
+# mean(p<0.05)
+# 
+# 
+# g(p)=beta^2
+# ### 
+# 
+# n<-10
+# set.seed(123)
+# iter<-10000 # number of simulations
+# p<-beta<-rep(NA,iter) # storage variables
+# sd_err<-sqrt((1-0.059)*1.48^2) # 1.46 sigma_y^2, 5.9% explained variance x^2
+# for(i in 1:iter){
+# x<-runif(111,2.58,9.23);xs<-x-mean(x) # simulate X and X-centered
+# beta[i]<-rnorm(1,mean=-0.14,sd=0.0682) 
+# y<-rbinom(111,10,boot::inv.logit(beta[i]*xs^2+rnorm(111,0,sd=sd_err)))
+# p[i]<-coef(summary(glm(cbind(y,n-y)~I(xs^2),family=binomial)))[2,4]
+# }
+# 
+# mean(p<0.05) #87.17%
+```
+
+#####  Loading dbs #####
+
+```{r}
+##db raw data cooperation
+# d <- read_excel("/Users/liberayleniamastromatteo/Desktop/paper_cooperazione1/R/raw_data.xlsx")
+##db final
+db<- read_excel("~/Dropbox/Mac/Downloads/db copia.xlsx")
+```
+
+#####  Descriptive statistics and correlations #####
+
+```{r desc, eval = F}
+#Figure with distribution of the main study variables:
+par(mfrow=c(1,3))
+h <- hist(db$Log.base)
+plot(h,xlab = "Cardiac Vagal Tone [log(rMSSD)]", ylab = "Counts",
+     main = "")
+db$age=as.numeric(db$age)
+i <- hist(db$age,breaks=6:11)
+plot(i,xlab = "age", ylab = "Counts",
+     main = "")
+
+k <- hist(db$sum)
+plot(k,xlab = "Sum of cooperative trials", ylab = "Counts",
+     main = "")
+
+#scatterplot for SM:
+pairs(~age+Log.base+sum,data = db,
+   main = "Scatterplot Matrix")
+
+#correlation:
+db_corr <- db[,c(7,9,10,12)]
+colnames(db_corr)[1] ="Cooperation"
+colnames(db_corr)[2] ="Linear CVT"
+colnames(db_corr)[3] ="Quadratic CVT"
+colnames(db_corr)[4] ="age"
+db_corr = as.matrix(db_corr)
+library(psych)
+pairs.panels(db_corr, method = "spearman",stars=TRUE)
+
+boxplot()
+label=c("Girl", "Boy") 
+  
+# boxplot with names parameter for labels 
+boxplot(db$sum~db$Gender,names=label, horizontal=TRUE, col = c("lightgrey","grey"),ylab= "Gender", xlab="Sum of Cooperative Behaviors") 
+# #number of cooperative behaviors
+# table(d$player1Coop)
+# #number of cooperative behaviors in T1
+# table(d$player1Coop, d$round==1)
+# 
+# median(db$rmssd.base)
+# quantile(db$rmssd.base, .25)
+# quantile(db$rmssd.base, .75)
+# 
+# db$quadratic = I(db$rmssd.base)^2
+# median(db$quadratic)
+# quantile(db$quadratic, .25)
+# quantile(db$quadratic, .75)
+```
+#Main analyses
+```{r main}
+##Log transformation
+db$Log.base = log(db$rmssd.base)
+db$pol1<-poly(db$rmssd.base,2)[,1]
+db$pol2<-poly(db$rmssd.base,2)[,2]
+db$Gender = db$gender
+db$age = db$age
+#RQ1: to study the relationship between CVT and cooperation
+fit.1 =glm(cbind(sum,10-sum) ~ Log.base + age + Gender,
+           data = db, 
+           family = "binomial")
+Anova(fit.1)
+summary(fit.1)
+
+effect("Log.base", fit.1) %>% plot(xlab= "CVT (log-rMSSD" , ylab = "Probability of cooperation") 
+
+fit.2 =glm(cbind(sum,10-sum) ~ poly(Log.base,2) + age + Gender,
+           data = db, 
+           family = "binomial")
+summary(fit.2)
+Anova(fit.2)
+
+effect("poly(Log.base,2)", fit.2) %>% plot(xlab= "CVT (log-rMSSD" , ylab = "Probability of cooperation") 
+
+BIC(fit.1,fit.2)
+
+#to be reported in the main text:
+merge(anova(fit.1), anova(fit.2), by=0, all=T)
+
+####Coefficients table to be added in the SM
+texreg::htmlreg(
+  list(fit.1, fit.2), # list of models to include
+  file = "SM.doc", # output filename
+  stars = c(0.001, 0.01, 0.05), 
+  center = TRUE, 
+  ci.force.level = 0.95,
+    # center on page
+  digits = 2,                          # digits for coefs and standard errors
+  single.row = TRUE,                   # standard errors below coefs or on same line
+  leading.zero = TRUE,
+  inline.css = FALSE, doctype = TRUE, html.tag = TRUE, head.tag = TRUE, body.tag = TRUE)
+
+##RQ2: moderation with age:
+fit.2b =glm(cbind(sum,10-sum) ~ poly(Log.base,2) + age + poly(Log.base,2):age,
+           data = db, 
+           family = "binomial") 
+summary(fit.2b)
+Anova(fit.2b)
+db$prop<-db$sum/10
+fit.2bb =glm(prop ~ poly(Log.base,2) + age + poly(Log.base,2):age,
+           data = db, 
+           family = "binomial") 
+
+#interact plot:
+f2<-interactions::interact_plot(fit.2bb, pred = Log.base, modx = age, data = db, interval = T,plot.points = T)+ylab("Probability of Cooperation") + xlab("Log-RMSSD")
+
+f1<-interactions::interact_plot(fit.2b, pred = Log.base, modx = age, data = db, interval = T,plot.points = T)+ylab("Probability of Cooperation") + xlab("Log-RMSSD")
+f1$layers[[3]]<-f2$layers[[3]]
+
+##Anova table fit 2
+q = Anova(fit.2b)
+kbl(q, booktabs = T,
+    align = "c", 
+    digits = 2) %>% 
+  kable_styling(latex_options = "striped", full_width = F,) %>% 
+  row_spec(0, angle = 0)
+
+###Coefficients table fit 2b to be added in the SM
+texreg::htmlreg(
+  list(fit.2b), # list of models to include
+  file = "fit2b.doc", # output filename
+  stars = c(0.001, 0.01, 0.05), 
+  center = TRUE,                       # center on page
+  digits = 2,                          # digits for coefs and standard errors
+  single.row = TRUE,                   # standard errors below coefs or on same line
+  leading.zero = TRUE,
+  inline.css = FALSE, doctype = TRUE, html.tag = TRUE, head.tag = TRUE, body.tag = TRUE)
+```
+
+##Johnson-Neyman test:
+```{r j, eval = F}
+newdata<-expand.grid(age=seq(6,11,by=0.1),Log.base=seq(2.67,5.00,0.1))
+newdata=newdata[ order(newdata[,1],newdata[,2]), ]   #just order lng as you do 
+pred<-predict(fit.2b,type="response",newdata=newdata,se=T)
+z<-matrix(pred$fit,24,51)
+persp(seq(2.67,5.00,0.1), seq(6,11,by=0.1),z=z, theta = 45, phi = 30)
+
+Log.base<-seq(2.67,5.00,0.1)
+age<-seq(6,11,by=0.1)
+persp(Log.base, age,z=z, theta = 30, phi = 30, expand = 0.5, col = "lightblue",zlab="Cooperation probability")
+
+
+db$pol1<-poly(db$Log.base,2)[,1]
+db$pol2<-poly(db$Log.base,2)[,2]
+fit.2b1<-glm(formula = cbind(sum, 10 - sum) ~ pol1*age  +pol2*age,family = "binomial", data = db)
+#testo solo nell'interazione significativa
+int1<-interactions::johnson_neyman(model = fit.2b1, pred = pol1,modx = age)
+g1<-int1$plot+ylab("Slope linear term")
+int2<-interactions::johnson_neyman(model = fit.2b1, pred = pol2,modx = age)
+g2<-int2$plot+ylab("Slope quadratic term")
+########### testiamo la nullità di entrambe le slope con un test parametrico
+fit.2b1<-glm(formula = cbind(sum, 10 - sum) ~ pol1*age  +pol2*age,family = "binomial", data = db)
+
+#Y=B1+B2*X1+B3*M+B4*X2+B5*X1*M+B6*X2*M
+
+# poly1 derivata rispetto a X1
+# dy/dX1= B2+B4*M
+slope1<-function(fit,M){
+  coef(summary(fit))[2]+
+  coef(summary(fit))[5]*M
+}
+
+se_slope1<-function(s,M){
+sqrt(s[2,2]+2*M*s[2,5]+M^2*s[5,5])
+}
+
+slope2<-function(fit,M){
+  coef(summary(fit))[4]+
+    coef(summary(fit))[6]*M
+}
+
+se_slope2<-function(s,M){
+  sqrt(s[4,4]+2*M*s[4,6]+M^2*s[6,6])
+}
+
+cov_slope2_slope1<-function(s,M){
+s[2,4]+M*s[2,6]+M*s[5,4]+M*M*s[5,6]
+}
+varcov<-vcov(fit.2b1)
+age<-seq(6,11,by=0.01)
+test<-rep(NA,length(age))
+for (a in 1: length(age)){
+test[a]<-t(c(slope1(fit.2b1,age[a]),slope2(fit.2b1,age[a])))%*%
+  solve(matrix(c(se_slope1(varcov,age[a])^2,cov_slope2_slope1(varcov,age[a]),cov_slope2_slope1(varcov,age[a]),se_slope2(varcov,age[a])^2),2,2))%*%
+  (c(slope1(fit.2b1,age[a]),slope2(fit.2b1,age[a])))
+}
+plot(1-pchisq(test,2))
+
+combined_test<-data.frame(Pvalue=1-pchisq(test,2),age=age,Significant=(1-pchisq(test,2))<0.05)
+combined_test$Significant<-as.factor(combined_test$Significant)
+combined_test$Significant<-relevel(combined_test$Significant,ref="TRUE")
+
+g3<-ggplot(combined_test, aes(x=age, y=Pvalue,col=Significant)) +
+  geom_line(size=1.5, alpha=0.9, linetype=1) +xlim(c(5.1,13))+
+  geom_hline(yintercept=0.05, linetype="dashed", color = "red")+
+  ggtitle("Combined test for linear and quadratic slope")+theme(plot.title=element_text(face="bold"))
+g3
+summary(combined_test$age[which(combined_test$Pvalue<0.05)])
+
+
+
+##plot
+
+library(gridExtra)
+grid.arrange(g1,g2,g3)
+
+```
+
+##Chek for differences full sampls vs final sample:
+```{r diff}
+db_all<- read_excel("/Volumes/LYM/001 - UNIPD/phd_anno1/Progetti/001 - scuola/002 - dati/db_all.xlsx")
+db_all = subset(db_all, ID != 1329)
+db_all = subset(db_all, ID != 1330)
+
+t.test(db_all$age~db_all$cond)
+t.test(db_all$sum~db_all$cond)
+chisq.test(db_all$gender,db_all$cond)
+```
+
+
+##Additional analyses with meanhr
+```{r new, results='asis'}
+hrv <- read_excel("~/Dropbox/Mac/Downloads/HRV_scuola.xlsx")
+db2 = db[,c(1:4,7)]
+db_fin = merge(db2, hrv, by = "ID", all = F)
+db_fin$Log.base = log(db_fin$rmssd)
+
+meanhr_lin = glm(cbind(sum,10-sum) ~ meanhr,
+            data = db_fin, 
+            family = "binomial") 
+summary(meanhr_lin)
+Anova(meanhr_lin)
+
+meanhr_quad = glm(cbind(sum,10-sum) ~ poly(meanhr,2),
+            data = db_fin, 
+            family = "binomial") 
+summary(meanhr_quad)
+Anova(meanhr_quad)
+
+library(stargazer)
+stargazer(meanhr_lin,meanhr_quad, type = "html", summary = TRUE, ci.level = 0.95, intercept.top = TRUE,
+          intercept.bottom = FALSE,title = "Risultati del modello", digits = 3, header = FALSE)
+
+```
+
+
+
+
+
+
+
+
+

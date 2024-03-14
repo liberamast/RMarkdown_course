@@ -1,0 +1,4 @@
+"0","grafico = ggplot(dati, "
+"0","       aes(y=Temp,x=Wind, color =Month, size = Day)) + geom_point() + "
+"0","  theme_bw() + theme(legend.position = ""none"") "
+"0","grafico"

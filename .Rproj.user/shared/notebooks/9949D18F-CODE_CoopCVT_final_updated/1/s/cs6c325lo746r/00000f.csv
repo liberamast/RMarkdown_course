@@ -1,0 +1,96 @@
+"0","library(readxl)"
+"0","library(ggeffects)"
+"0","library(sjPlot)"
+"2","Registered S3 methods overwritten by 'broom':
+  method            from  
+  tidy.glht         jtools
+  tidy.summary.glht jtools
+"
+"2","Learn more about sjPlot with 'browseVignettes(""sjPlot"")'.
+"
+"0","library(ggplot2)"
+"0","library(car)"
+"2","Loading required package: carData
+"
+"2","
+Attaching package: ‘car’
+
+"
+"2","The following object is masked from ‘package:dplyr’:
+
+    recode
+
+"
+"0","library(lmtest)"
+"2","Loading required package: zoo
+"
+"2","
+Attaching package: ‘zoo’
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+"
+"0","library(Hmisc)"
+"2","Registered S3 method overwritten by 'htmlwidgets':
+  method           from         
+  print.htmlwidget tools:rstudio
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","
+Attaching package: ‘Hmisc’
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    src, summarize
+
+"
+"2","The following objects are masked from ‘package:base’:
+
+    format.pval, units
+
+"
+"0","library(janitor)"
+"2","
+Attaching package: ‘janitor’
+
+"
+"2","The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+"
+"0","library(flextable)"
+"2","
+Attaching package: ‘flextable’
+
+"
+"2","The following objects are masked from ‘package:kableExtra’:
+
+    as_image, footnote
+
+"
+"0","library(gtsummary)"
+"2","
+Attaching package: ‘gtsummary’
+
+"
+"2","The following objects are masked from ‘package:flextable’:
+
+    as_flextable, continuous_summary
+
+"
+"0","library(knitr)"
+"0","library(kableExtra)"
+"0","library(ggeffects)"
+"0","library(effects)"
+"2","lattice theme set by effectsTheme()
+See ?effectsTheme for details.
+"
+"0","library(car)"

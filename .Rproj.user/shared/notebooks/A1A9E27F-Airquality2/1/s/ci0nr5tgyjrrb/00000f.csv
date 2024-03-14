@@ -1,0 +1,3 @@
+"0","yi = dati$Temp[1]"
+"0","mean_y = mean(dati$Temp)"
+"0","sd_y = sd(dati$Temp)"

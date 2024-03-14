@@ -1,0 +1,39 @@
+fit.1a =glm(cbind(sum,10-sum) ~ Log.base + meanhr + age + gender,
+           data = db_fin, 
+           family = "binomial")
+Anova(fit.1a)
+summary(fit.1)
+
+fit.2a =glm(cbind(sum,10-sum) ~ poly(Log.base,2)+meanhr + age + gender,
+           data = db_fin, 
+           family = "binomial")
+summary(fit.2a)
+anova(fit.1a,fit.2a, test = "Chisq")
+
+
+fit.1b =glm(cbind(sum,10-sum) ~ Log.base + age,
+            data = db, 
+            family = "binomial")
+Anova(fit.1)
+summary(fit.1)
+
+effect("Log.base", fit.1) %>% plot(xlab= "CVT (log-rMSSD" , ylab = "Probability of cooperation") 
+
+fit.2b =glm(cbind(sum,10-sum) ~ poly(Log.base,2) + age,
+            data = db, 
+            family = "binomial")
+summary(fit.2)
+Anova(fit.2)
+
+
+texreg::htmlreg(
+  list(fit.1a, fit.1b, fit.2a,fit.2b), # list of models to include
+  file = "reviwer.doc", # output filename
+  stars = c(0.001, 0.01, 0.05), 
+  center = TRUE, 
+  ci.force.level = 0.95,
+  # center on page
+  digits = 2,                          # digits for coefs and standard errors
+  single.row = TRUE,                   # standard errors below coefs or on same line
+  leading.zero = TRUE,
+  inline.css = FALSE, doctype = TRUE, html.tag = TRUE, head.tag = TRUE, body.tag = TRUE)

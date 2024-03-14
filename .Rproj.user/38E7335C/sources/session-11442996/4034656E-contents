@@ -1,0 +1,17 @@
+/* GENERAL SLIDES */
+
+h2 {
+    color: #9B0A14;
+}
+
+h3 {
+    color: #9B0;
+}
+
+slides > slide.dark {
+  background-color: #9B0A14 !important;
+}
+
+slides > slide {
+background: #fefefe !important;
+}

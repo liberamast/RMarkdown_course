@@ -1,0 +1,33 @@
+{
+    "id": "9B41F0E4",
+    "path": "~/Desktop/RMarkdown_course/Airquality2.Rmd",
+    "project_path": "Airquality2.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1710145725888.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "tempName": "Untitled3",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "7,24",
+        "scrollLine": "0",
+        "last_setup_crc32": "114429964697c909",
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "docOutlineVisible": "1",
+        "rmdVisualCollapsedChunks": "",
+        "rmdVisualModeLocation": "1271:1305.5999755859375"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1710329366,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1710329366395,
+    "read_only": false,
+    "read_only_alternatives": []
+}

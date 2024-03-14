@@ -1,0 +1,210 @@
+dat = subset(dat, cond == 0)
+dim(dat)
+
+
+ 
+
+ dat2 = dat[complete.cases(dat$meanhr)]
+ complete_cases <- complete.cases(dat)
+ complete_df <- dat[complete_cases, ]
+ fit.2b =glm(cbind(sum,10-sum) ~ poly(Log.base,2) + age + poly(Log.base,2) :age,
+             data = complete_df, 
+             family = "binomial") 
+summary(fit.2b)
+Anova(fit.2b)
+
+effect("meanhr", fit.2b) %>% plot(xlab= "CVT (log-rMSSD" , ylab = "Probability of cooperation") 
+
+db_fin = merge(db,hrv, by = "ID", all = T)
+db_fin2 = merge(db,hrv, by = "ID", all = F)
+
+
+fit.2b =glm(cbind(sum,10-sum) ~ poly(meanhr,2) + age + poly(meanhr,2) :age,
+            data = db_fin, 
+            family = "binomial") 
+summary(fit.2b)
+Anova(fit.2b)
+
+
+fit.2b =glm(cbind(sum,10-sum) ~ poly(meanhr,2) + age + poly(meanhr,2) :age,
+            data = db_fin, 
+            family = "binomial") 
+summary(fit.2b)
+Anova(fit.2b)
+
+vec1 = db$ID
+vec2 = db_fin2$ID
+# Calcola la differenza tra i due vettori
+diff_vec <- setdiff(vec1, vec2)
+
+# Trova il numero in più
+numero_in_piu <- diff_vec[1]
+
+print(numero_in_piu)
+
+
+
+
+hrv <- read_excel("~/Dropbox/Mac/Downloads/HRV_scuola.xlsx")
+db2 = db[,c(1:4,7)]
+db_fin = merge(db2, hrv, by = "ID", all = F)
+db_fin$Log.base = log(db_fin$rmssd)
+
+
+fit.2b =glm(cbind(sum,10-sum) ~ poly(Log.base,2) + age + poly(Log.base,2) :age,
+            data = db_fin, 
+            family = "binomial") 
+summary(fit.2b)
+Anova(fit.2b)
+
+
+fit.2b =glm(cbind(sum,10-sum) ~ poly(meanhr,2),
+            data = db_fin, 
+            family = "binomial") 
+summary(fit.2b)
+Anova(fit.2b)
+
+
+
+# Lista di stringhe
+lista_stringhe <- c("ALCA14122001",
+                    "ALPI09032001",
+                    "ANZO20022001",
+                    "ANGU05122000",
+                    "ANIM05012000",
+                    "ANPO19022000",
+                    "AUTO17011998",
+                    "BEPO090999",
+                    "CABO11102000",
+                    "CHMA08101998",
+                    "EM16062001",
+                    "ELPI26072001",
+                    "ELRA01062001",
+                    "ELGA31122001",
+                    "EMDE27032001",
+                    "FRTE20022001",
+                    "FRMA20082001",
+                    "FRCA13012000",
+                    "FRSM14121999",
+                    "GADE12011999",
+                    "GAPA06072001",
+                    "GIBE17052001",
+                    "GIME05082000",
+                    "GICO01092000",
+                    "GRPA04052000",
+                    "ILSA16121999",
+                    "ILTO07072000",
+                    "ISBA21102001",
+                    "KAGU26052001",
+                    "LURO12102000",
+                    "MAZA15101999",
+                    "MAFO12072000",
+                    "MATU07062000",
+                    "MAST25022001",
+                    "MAZA15102001",
+                    "MR30111999",
+                    "MAMA03052001",
+                    "nifi15042001",
+                    "PISO11062001",
+                    "RABA24052001",
+                    "RADE11072000",
+                    "RECH21082000",
+                    "SADI15112001",
+                    "SACI08082001",
+                    "SAPI02091996",
+                    "SARI07091999",
+                    "SOBA13112000",
+                    "SOGI21061999",
+                    "SORO29052001",
+                    "SOPA131100",
+                    "TEDA02022000",
+                    "VALA15092001",
+                    "YUDE09062000",
+                    "MAGI21082001",
+                    "SIMO14012003",
+                    "LUZO08031967",
+                    "LOGI05032000",
+                    "ANFR25102003",
+                    "FRIN22121998",
+                    "EDCR24091996",
+                    "EDAL211195",
+                    "GIBO27062000",
+                    "MIPU14051999",
+                    "ANLOGI11072001",
+                    "EMTO16012002",
+                    "ANRA28092002",
+                    "MACA08011998",
+                    "STMO25071998",
+                    "FRMA01092001",
+                    "LUMA02032001",
+                    "JEZA24042000",
+                    "MAPE08122000",
+                    "ALNA05021999",
+                    "DABU28032000",
+                    "SACA19092000",
+                    "ELMA12121998",
+                    "RIME31012002",
+                    "ISLU23071999",
+                    "AL19062001",
+                    "NIPE25102001",
+                    "ANPA03021999",
+                    "ENMA03022000",
+                    "ANRO27071971",
+                    "SEZA01101998",
+                    "MABE15111999",
+                    "FRTO26071998",
+                    "ALCO26092000",
+                    "MESH27012002",
+                    "MM08041999",
+                    "GAMA10121963",
+                    "mafo06091999",
+                    "VIBA27122001",
+                    "EMSA29042001",
+                    "TOCA11102001",
+                    "ALMA18052004",
+                    "MAGI09032001",
+                    "MAPA04092001",
+                    "GIFA22031996",
+                    "DAMA16111999",
+                    "GIGE05101997",
+                    "GIBI24022000",
+                    "PIDA19102000",
+                    "ENDA220502",
+                    "MAMA29112000",
+                    "VICA07072000",
+                    "PAZI25091957")
+
+# Calcola il numero di gruppi necessari
+num_gruppi <- length(lista_stringhe) %/% 3
+# Se non è divisibile per 3, aggiungi un gruppo in più
+if (length(lista_stringhe) %% 3 != 0) {
+  num_gruppi <- num_gruppi + 1
+}
+
+# Dividi la lista in gruppi casuali da 3 senza reinserimento
+gruppi <- lapply(1:num_gruppi, function(i) {
+  # Calcola l'indice iniziale per il gruppo corrente
+  start_idx <- (i - 1) * 3 + 1
+  # Calcola l'indice finale per il gruppo corrente
+  end_idx <- min(i * 3, length(lista_stringhe))
+  # Estrai casualmente gli elementi per il gruppo corrente
+  sample(lista_stringhe[start_idx:end_idx])
+})
+
+# Stampare i gruppi
+for (i in seq_along(gruppi)) {
+  cat("Gruppo", i, ":", gruppi[[i]], "\n")
+}
+
+
+gruppi <- split(sample(lista_stringhe), rep(1:ceiling(length(lista_stringhe)/3), each = 3, length.out = length(lista_stringhe)))
+
+# Stampa i gruppi
+for (i in seq_along(gruppi)) {
+  cat("Gruppo", i, ":", gruppi[[i]], "\n")
+}
+
+
+
+
+

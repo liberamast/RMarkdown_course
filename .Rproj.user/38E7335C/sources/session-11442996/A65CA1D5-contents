@@ -1,0 +1,170 @@
+---
+title: "Nuova Presentazione"
+author: "Libera Mastromatteo"
+date: "2024-03-13"
+output:
+  ioslides_presentation:
+    logo: pics/logo.png
+    css: css/style.css
+    widescreen: true
+  beamer_presentation: default
+subtitle: Esercitazione
+#knit: pagedown::chrome_print
+---
+
+<style>
+.forceBreak { -webkit-column-break-after: always; break-after: column; }
+.myClass {font-size: 100px;}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+#pagedown::chrome_print("pres.html")
+```
+
+# slide 
+ahahahhah
+
+## Prova
+<img width="10%" height="10%" src="pics/logo.png">
+
+
+## Prova 2
+
+<font size="3">Una slide con testo piccolo</font>
+
+### Prova 2.1
+
+## <span style="color:red">Una slide con testo colorato</span>
+
+## Slide x
+
+- <img width="10%" height="10%" src="pics/logo.png">: <span style="color:#9B0A14">logo unipd 1</span>
+- <img width="10%" height="10%" src="pics/logo.png">: <span style="color:#9B0A14">logo unipd 2</span>
+- <img width="10%" height="10%" src="pics/logo.png">: <span style="color:#9B0A14">logo unipd 3</span>
+
+## Animazione {.build}
+
+<div>
+
+ciccio
+
+pasticcio
+
+</div>
+
+<div>
+
+ciccio 1 
+
+pasticcio 2
+
+</div>
+
+cicciopasticcio
+
+## colonne {.build}
+
+<div style="float: left; width: 50%; text-align: left;"> colonna A
+
+<div>
+
+Hei Jude
+
+</div>
+
+
+Hello Word
+
+</div>
+
+
+<div style="float: right; width: 50%; text-align: right;"> colonna B
+
+<div>
+
+Hi
+
+</div>
+
+## oppure
+
+Testo fuori dalle colonne
+
+<div style="float: left; width: 50%; text-align: left;"> Testo colonna sx con allinemento a sx
+</div> 
+
+<div style="float: right; width: 50%; text-align: right;"> Testo colonna dx con allineamento a dx
+</div> 
+
+## oppure {.build .columns-2}
+
+Hi 
+
+<p class="forceBreak"></p>
+
+Hey
+
+## METTERE CODICE NELLE SLIDES
+
+```{r class.source="myClass"}
+m1 = lm(Temp ~ Month, airquality)
+summary(m1)
+```
+
+## Scrollare cose su slides
+```{css}
+pre {
+  max-height: 700px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 500px;
+}
+
+.scroll-100 {
+  max-height: 500px;
+  overflow-y: auto;
+  background-color: inherit;
+}
+```
+
+```{r class.output="scroll-100", eval = F, echo=T}
+shiny::shinyApp(
+ ui = fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(inputId = "dataset", # nome dell'input per il server
+                  label = "Choose a dataset:", # nome dell'input per lo user
+                  choices = c("rock", "pressure")) # opzioni
+    ),
+
+    mainPanel(
+      plotOutput( #qui voglio un grafico 
+        "graph"   
+      )
+    ) 
+  )
+),
+
+server = function(input, output){
+  output$graph <- renderPlot({
+    if(input$dataset == "rock"){ 
+      data <- rock
+    } else {
+      data <- pressure
+    } 
+    plot(data[, c(1:2)])
+  })
+}, 
+options = list(height = 300)
+)
+```
+
+
+
+
+
+
+
